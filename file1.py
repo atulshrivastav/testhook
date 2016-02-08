@@ -133,7 +133,7 @@ if 'key1' in a:  # search the keys only
 # key is not mutable; value is mutable
 a['key1'] = 2.6
 a['key4'] = 2.7
-print 'a',a,' type of a ',type(a),' length of a ',len(a)
+print 'a',a,' type of a ',type(a) ,' length of a ',len(a)
 # dictionary comprehension; multiply value of key numbers by 2
 a = {x: x*2 for x in range(1,10)}
 print 'a', a,' type of a ',type(a),' length of a ',len(a)
