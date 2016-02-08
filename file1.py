@@ -122,7 +122,7 @@ print 'a', a,' type of a ',type(a),' length of a ',len(a)
 ####################################################################
 # 7. dictionary datatype - name:value pairs (associative array)
 print '\nexplore dictionary datatype'
-a = {'key1':2.5, 'key2':'abcdef', 'key3':3.4}
+a = {'key1':2.5, 'key2' :'abcdef', 'key3':3.4}
 print 'a', a,' type of a ',type(a),' length of a ',len(a)
 for c in a:
    print '\t',c,a[c]
