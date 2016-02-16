@@ -88,9 +88,66 @@ def check_repo():
     # Don't do anything if there are no Python files
     if len(python_files) == 0:
         sys.exit(0)
-    for fl in python_files:
-        py_compile.compile(fl, './t1.txt')
+    if compile_files(python_files, force=1):
+        all_filed_passed = True
+
     return all_filed_passed
+
+
+def compile_files(files, ddir=None, force=0, rx=None, quiet=0, ignore=0):
+    """Byte-compile all file.
+    file:      the file to byte-compile
+    ddir:      if given, purported directory name (this is the
+               directory name that will show up in error messages)
+    force:     if 1, force compilation, even if timestamps are up-to-date
+    quiet:     if 1, be quiet during compilation
+
+    """
+
+    success = 1
+    dfile = None
+    for fullname in files:
+        if rx is not None:
+            mo = rx.search(fullname)
+            if mo:
+                continue
+        if os.path.isdir(fullname):
+            continue
+        elif not os.path.isfile(fullname):
+            print "file does not exist:", fullname
+            success = 0
+        elif fullname[-3:] == '.py':
+            cfile = fullname + (__debug__ and 'c' or 'o')
+            ftime = os.stat(fullname).st_mtime
+            try: ctime = os.stat(cfile).st_mtime
+            except os.error: ctime = 0
+            if (ctime > ftime) and not force: continue
+            if not quiet:
+                print 'Compiling', fullname, '...'
+            try:
+                ok = py_compile.compile(fullname, None, dfile, True)
+            except KeyboardInterrupt:
+                raise KeyboardInterrupt
+            except py_compile.PyCompileError,err:
+                if quiet:
+                    print 'Compiling', fullname, '...'
+                print err.msg
+                success = 0
+            except (MemoryError, SyntaxError),err:
+                if quiet:
+                    print 'Compiling', fullname, '...'
+                print err.msg
+                success = 0
+            except IOError, e:
+                print "Sorry", e
+                success = 0
+            else:
+                if ok == 0:
+                    success = 0
+    if not success and ignore:
+        print "Errors were ignored."
+    return success or ignore
+
 
 if __name__=='__main__':
     check_repo()
