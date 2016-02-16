@@ -11,7 +11,7 @@ import sys
 
 ####################################################################
 # 1. explore str datatype
-print '\nexplore str datatype'
+print '           \nexplore str datatype'
 a = 'abcdef'
 # immutable
 a[0] = 'b'  
